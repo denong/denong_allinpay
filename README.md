@@ -1,15 +1,10 @@
-<<<<<<< HEAD
-# DenongAllinpay
-
 TODO: Write a gem description
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
 gem 'denong_allinpay'
-```
 
 And then execute:
 
@@ -31,5 +26,3 @@ TODO: Write usage instructions here
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 =======
-# denong_allinpay
->>>>>>> d7addb23e63575a009fb7d3ec86208eb785e9cc3
