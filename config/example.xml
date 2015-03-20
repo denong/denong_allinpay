@@ -1,0 +1,4 @@
+<config>
+  <IPAddr>127.0.0.1</IPAddr>
+  <Port>8081</Port>
+</config>
