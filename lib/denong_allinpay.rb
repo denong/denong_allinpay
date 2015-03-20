@@ -48,7 +48,7 @@ module DenongAllinpay
 
 		@data_hash = decode decode_string,decode_hash
 
-		response = RestClient.post dest_addr,@data_hash
+		response = RestClient.post @dest_addr,@data_hash
 		if response.code = 200
 			@data_hash[:resp_code] = "00"
 		else
@@ -65,6 +65,8 @@ end
 
 config_path = "../config/config.xml"
 doc = Nokogiri::XML(open(config_path))
+
+@dest_addr = doc.search("DestAddr").first.content
 ip_addr = doc.search("IPAddr").first.content
 port = doc.search("Port").first.content
 
