@@ -1,4 +1,6 @@
 <config>
+  <DestAddr>127.0.0.1</DestAddr>
+  <DestPort>80</DestPort>
   <IPAddr>127.0.0.1</IPAddr>
   <Port>8081</Port>
 </config>
