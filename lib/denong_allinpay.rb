@@ -1,4 +1,4 @@
-require "EventMachine"
+require "eventmachine"
 require "./denong_allinpay/version"
 require "./parse_string.rb"
 require "nokogiri"
