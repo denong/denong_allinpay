@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DenongAllinpay
 
 TODO: Write a gem description
@@ -29,3 +30,6 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+=======
+# denong_allinpay
+>>>>>>> d7addb23e63575a009fb7d3ec86208eb785e9cc3
