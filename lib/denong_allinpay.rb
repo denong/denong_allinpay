@@ -2,6 +2,7 @@ require "eventmachine"
 require "./denong_allinpay/version"
 require "./parse_string.rb"
 require "nokogiri"
+require "rest_client"
 
 module DenongAllinpay
 	include CodeProcessor
