@@ -12,12 +12,16 @@ module DenongAllinpay
 	end
 
 	def receive_data data
-		puts "Received #{data}"
+		puts "Received #{data}\n"
 		data_process data
-		puts "Result is #{@data_hash}"
+		puts "Result is #{@data_hash}\n"
 
+		puts "send hash is #{@data_hash}\n"
+		puts "send result is #{@data_result}\n"
 		send_data @data_hash
 		send_data @data_result 
+		@data_hash.clear if @data_hash
+		@data_result.clear if @data_result
 	end
 
 	def unbind
@@ -48,8 +52,8 @@ module DenongAllinpay
 		}
 
 		@data_hash = decode decode_string,decode_hash
-
-		# response = RestClient.post @dest_addr,@data_hash
+		return unless @data_hash
+		# response = RestClient.post $dest_addr,@data_hash
 		# if response.code = 200
 		# 	@data_hash[:resp_code] = "00"
 		# else
@@ -58,7 +62,6 @@ module DenongAllinpay
 
 		#编码时需要加上应答码两个字节,用于调试
 		@data_hash[:resp_code] = "00"
-
 		@data_result = encode @data_hash,decode_hash
 	end
 end
@@ -70,8 +73,7 @@ EventMachine.run {
   doc = Nokogiri::XML(open(config_path))
   ip_addr = doc.search("IPAddr").first.content
   port = doc.search("Port").first.content
-  EventMachine.start_server ip_addr, port, DenongAllinpay do |em|
-    em.dest_addr = doc.search("DestAddr").first.content
-  end
+ 	$dest_addr = doc.search("DestAddr").first.content 
+  EventMachine.start_server ip_addr, port, DenongAllinpay
   puts "Listening ....."
 }
