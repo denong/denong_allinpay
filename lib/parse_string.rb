@@ -3,7 +3,7 @@ module CodeProcessor
 		decode_result = {}
 
 		return unless check_string decode_string		# 检查字符串长度是否正确
-		
+
 		decode_hash.each do |name,info_hash|
 			next if name == :resp_code						#收到数据不含有，响应码
 
@@ -43,7 +43,6 @@ module CodeProcessor
 
 		#add msg_length
 		msg_length = encode_string.size.to_s(16).rjust(4,"0").upcase
-		puts "encode_string size is #{encode_string.size} msg_length is #{msg_length}"
 		encode_string.insert(0,msg_length)
 
 		encode_string
