@@ -49,29 +49,29 @@ module DenongAllinpay
 
 		@data_hash = decode decode_string,decode_hash
 
-		response = RestClient.post $dest_addr,@data_hash
-		if response.code = 200
-			@data_hash[:resp_code] = "00"
-		else
-			@data_hash[:resp_code] = "01"
-		end
+		# response = RestClient.post @dest_addr,@data_hash
+		# if response.code = 200
+		# 	@data_hash[:resp_code] = "00"
+		# else
+		# 	@data_hash[:resp_code] = "01"
+		# end
 
 		#编码时需要加上应答码两个字节,用于调试
-		# @data_hash[:resp_code] = "00"
+		@data_hash[:resp_code] = "00"
 
 		@data_result = encode @data_hash,decode_hash
 	end
 end
 
 
-config_path = "../config/config.xml"
-doc = Nokogiri::XML(open(config_path))
-
-$dest_addr = doc.search("DestAddr").first.content
-ip_addr = doc.search("IPAddr").first.content
-port = doc.search("Port").first.content
-
 # Note that this will block current thread.
 EventMachine.run {
-  EventMachine.start_server ip_addr, port, DenongAllinpay
+  config_path = "../config/config.xml"
+  doc = Nokogiri::XML(open(config_path))
+  ip_addr = doc.search("IPAddr").first.content
+  port = doc.search("Port").first.content
+  EventMachine.start_server ip_addr, port, DenongAllinpay do |em|
+    em.dest_addr = doc.search("DestAddr").first.content
+  end
+  puts "Listening ....."
 }
