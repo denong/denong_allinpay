@@ -38,6 +38,7 @@ module CodeProcessor
 		encode_string = ""
 
 		data_hash[:trade_time] = data_hash[:trade_time].slice!(-6..-1)
+		data_hash[:bit_map][-7] = "A"
 		encode_hash.each do |name,info_hash|
 			next if (name == :msg_len || (!data_hash.has_key? name))
 			
@@ -56,6 +57,7 @@ module CodeProcessor
 		#add msg_length
 		msg_length = (encode_string.size/2).to_s(16).rjust(4,"0").upcase
 		encode_string.insert(0,msg_length)
+		data_hash[:msg_len] = msg_length
 
 		encode_string
 	end
@@ -82,7 +84,4 @@ module CodeProcessor
 		data_string
 	end
 end
-
-
-
 
