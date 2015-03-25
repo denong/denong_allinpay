@@ -4,7 +4,6 @@ module CodeProcessor
 
 		return unless check_string decode_string		# 检查字符串长度是否正确
 
-		puts "not return"
 		decode_hash.each do |name,info_hash|
 			next if name == :resp_code						#收到数据不含有，响应码
 
@@ -65,7 +64,6 @@ module CodeProcessor
 
 	def check_string decode_string
 		return_bool = false
-		puts "decode_string: #{decode_string.size.to_i}, calc: #{(decode_string[0,4].hex.to_i+4)*2}"
 		return_bool = true if (decode_string.size.to_i == (decode_string[0,4].hex.to_i)*2+4)
 		return_bool
 	end
