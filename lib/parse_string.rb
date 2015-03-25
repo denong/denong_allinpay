@@ -4,6 +4,7 @@ module CodeProcessor
 
 		return unless check_string decode_string		# 检查字符串长度是否正确
 
+		puts "not return"
 		decode_hash.each do |name,info_hash|
 			next if name == :resp_code						#收到数据不含有，响应码
 
@@ -12,12 +13,19 @@ module CodeProcessor
 				string_length = decode_result[:account_len].to_i-decode_hash[:phone][:length]
 			end
 
+
 			#取得需要解码的string的长度
 			string_temp = decode_string.slice!(0,string_length)
-			if info_hash[:type] == :ascii_convert
-				string_temp = ascii_to_string string_temp
-			end
 
+			case info_hash[:type]
+			when :ascii_convert then
+				string_temp = ascii_to_string string_temp
+			when :bcd_byte then
+				string_temp = string_temp.to_i*2	
+			when :bcd_even then
+				string_temp = string_temp[0,string_temp.size-1] if string_temp[-1] == "B"
+			end
+			
 			#得到数据的名字，对应内容
 			decode_result[name] = string_temp
 		end
@@ -35,14 +43,19 @@ module CodeProcessor
 			next if (name == :msg_len || (!data_hash.has_key? name))
 			
 			string_temp = data_hash[name]
-			if info_hash[:type] == :ascii_convert
+			case info_hash[:type]
+			when :ascii_convert then
 				string_temp = string_to_ascii string_temp
+			when :bcd_byte then
+				string_temp = (string_temp.to_i/2).to_s	
+			when :bcd_even then
+				string_temp = string_temp.concat("B") if string_temp.size%2
 			end
 			encode_string << string_temp
 		end
 
 		#add msg_length
-		msg_length = encode_string.size.to_s(16).rjust(4,"0").upcase
+		msg_length = (encode_string.size/2).to_s(16).rjust(4,"0").upcase
 		encode_string.insert(0,msg_length)
 
 		encode_string
@@ -52,7 +65,8 @@ module CodeProcessor
 
 	def check_string decode_string
 		return_bool = false
-		return_bool = true if (decode_string.size.to_i == decode_string[0,4].hex.to_i+4)
+		puts "decode_string: #{decode_string.size.to_i}, calc: #{(decode_string[0,4].hex.to_i+4)*2}"
+		return_bool = true if (decode_string.size.to_i == (decode_string[0,4].hex.to_i)*2+4)
 		return_bool
 	end
 
