@@ -11,13 +11,13 @@ class Allinpay
     body = []
 
     data = env['rack.input'].gets
+    puts "Received #{data}\n"
+
     @data_result = data_process data
     body << @data_result
-
-    puts "Received #{data}\n"
-    puts "Result is #{@data_hash}\n"
-    puts "result hash is #{@data_hash}\n"
-    puts "result data is #{@data_result}, its class is #{@data_result.class}\n"
+    
+    puts "encode hash is #{@data_hash}\n"
+    puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
 
     [
       200,
@@ -55,6 +55,8 @@ class Allinpay
 
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
+    puts "decode hash is #{@data_hash}\n"
+
     # response = RestClient.post $dest_addr,@data_hash
     # if response.code = 200
     #   @data_hash[:resp_code] = "00"
