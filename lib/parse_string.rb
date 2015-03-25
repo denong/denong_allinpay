@@ -49,7 +49,7 @@ module CodeProcessor
 			when :bcd_byte then
 				string_temp = (string_temp.to_i/2).to_s	
 			when :bcd_even then
-				string_temp = string_temp.concat("B") if string_temp.size%2
+				string_temp = string_temp.concat("B") if string_temp.size%2 == 0
 			end
 			encode_string << string_temp
 		end
