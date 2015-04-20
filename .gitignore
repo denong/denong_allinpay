@@ -15,3 +15,5 @@ mkmf.log
 config/config.xml
 lib/log
 lib/tmp
+lib/test.rb
+lib/socket_test.rb
