@@ -12,7 +12,6 @@ module CodeProcessor
 				string_length = decode_result[:account_len].to_i-decode_hash[:phone][:length]
 			end
 
-
 			#取得需要解码的string的长度
 			string_temp = decode_string.slice!(0,string_length)
 

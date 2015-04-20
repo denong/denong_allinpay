@@ -3,28 +3,16 @@ require "./parse_string.rb"
 require "nokogiri"
 require "rest_client"
 require 'thin'
-
+require "socket"
 
 class Allinpay
   include CodeProcessor
-  def call(env)
-    body = []
-
-    data = env['rack.input'].gets
+  def process data
     puts "Received #{data}\n"
-
     @data_result = data_process data
-    body << @data_result
-    
     puts "encode hash is #{@data_hash}\n"
     puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
-
-    [
-      200,
-      { 'Content-Type' => 'text/plain' },
-      body
-    ]
-
+    @data_result
   end
   
   private
@@ -52,7 +40,6 @@ class Allinpay
     @data_hash.clear if @data_hash
     @data_result.clear if @data_result
 
-
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
     puts "decode hash is #{@data_hash}\n"
@@ -75,9 +62,23 @@ doc = Nokogiri::XML(open(config_path))
 ip_addr = doc.search("IPAddr").first.content
 port = doc.search("Port").first.content
 $dest_addr = doc.search("DestAddr").first.content
-Thin::Server.start(ip_addr, port) do
-  use Rack::CommonLogger
-  map '/' do
-    run Allinpay.new
+
+server = TCPServer.new port
+Thin::Server.start do
+  loop do
+    Thread.start(server.accept) do |client|
+      allinpay = Allinpay.new
+      data = client.gets
+      data = data[0..-2]
+
+      begin
+        result = allinpay.process data
+        client.puts result
+      rescue Exception => e
+        puts "Exception is #{e}"
+      end
+      
+      # client.close
+    end
   end
 end
