@@ -9,13 +9,14 @@ require "socket"
 module Allinpay
   include CodeProcessor
   def receive_data data
+    data.gsub!("\n","")
     puts "Received #{data}, its size is #{data.size}\n"
     @data_result = data_process data
     puts "encode hash is #{@data_hash}\n"
     puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
-    @data_result
+    send_data "@data_result"
   end
-  
+
   private
   def data_process decode_string
     decode_hash = {
@@ -66,9 +67,9 @@ $dest_addr = doc.search("DestAddr").first.content
 
 # puts "ip address is #{ip_addr}, port is #{port}"
 # server = TCPServer.open ip_addr, port
-# Thin::Server.start do
-EM.run { EM.start_server ip_addr, port, Allinpay }
-# end
+Thin::Server.start do
+  EM.run { EM.start_server ip_addr, port, Allinpay }
+end
   # loop do
   #   Thread.start(server.accept) do |client|
   #     allinpay = Allinpay.new
