@@ -5,10 +5,10 @@ require "rest_client"
 require 'thin'
 require "socket"
 
-class Allinpay
+module Allinpay
   include CodeProcessor
-  def process data
-    puts "Received #{data}\n"
+  def receive_data data
+    puts "Received #{data}, its size is #{data.size}\n"
     @data_result = data_process data
     puts "encode hash is #{@data_hash}\n"
     puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
@@ -63,22 +63,25 @@ ip_addr = doc.search("IPAddr").first.content
 port = doc.search("Port").first.content
 $dest_addr = doc.search("DestAddr").first.content
 
-server = TCPServer.new port
-Thin::Server.start do
-  loop do
-    Thread.start(server.accept) do |client|
-      allinpay = Allinpay.new
-      data = client.gets
-      data = data[0..-2]
+# puts "ip address is #{ip_addr}, port is #{port}"
+# server = TCPServer.open ip_addr, port
+# Thin::Server.start do
+EM.run { EM.start_server ip_addr, port, Allinpay }
+# end
+  # loop do
+  #   Thread.start(server.accept) do |client|
+  #     allinpay = Allinpay.new
+  #     data = client.gets
+  #     puts data
+  #     data = data[0..-2]
 
-      begin
-        result = allinpay.process data
-        client.puts result
-      rescue Exception => e
-        puts "Exception is #{e}"
-      end
+  #     begin
+  #       result = allinpay.process data
+  #       client.puts result
+  #     rescue Exception => e
+  #       puts "Exception is #{e}"
+  #     end
       
-      # client.close
-    end
-  end
-end
+  #     client.close
+  #   end
+  # end
