@@ -11,8 +11,9 @@
 require 'rubygems'
 require "daemons"
 
+
 begin
-	Daemons.run('denong_allinpay.rb')
+	Daemons.run('./denong_allinpay.rb')
 rescue Exception => e
 	puts "exception is #{e}"
 end

@@ -1,5 +1,6 @@
-require "./denong_allinpay/version"
-require "./parse_string.rb"
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+require "denong_allinpay/version"
+require "parse_string.rb"
 require "nokogiri"
 require "rest_client"
 require 'thin'
