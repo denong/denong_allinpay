@@ -14,7 +14,7 @@ module CodeProcessor
 
 			#取得需要解码的string的长度
 			string_temp = decode_string.slice!(0,string_length)
-
+			return unless string_temp
 			case info_hash[:type]
 			when :ascii_convert then
 				string_temp = ascii_to_string string_temp
@@ -39,6 +39,7 @@ module CodeProcessor
 		data_hash[:trade_time] = data_hash[:trade_time].slice!(-6..-1)
 		data_hash[:bit_map][-7] = "A"
 		encode_hash.each do |name,info_hash|
+
 			next if (name == :msg_len || (!data_hash.has_key? name))
 			
 			string_temp = data_hash[name]

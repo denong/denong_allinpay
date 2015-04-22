@@ -13,7 +13,7 @@ module Allinpay
 
     data.gsub!("\n","")
     changed_data = data.unpack("H*").join.upcase
-    
+    return if changed_data == "000430303030"
     # changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
     puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
