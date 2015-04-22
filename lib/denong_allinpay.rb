@@ -17,7 +17,7 @@ module Allinpay
     # changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
     puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
-    send_data "#{data_result}\n"
+    send_data "#{data_result}"
     puts "encode hash is #{@data_hash}\n"
     puts "encode data is #{data_result}, its class is #{data_result.class}\n"
   end
