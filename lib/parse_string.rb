@@ -59,7 +59,7 @@ module CodeProcessor
 		encode_string.insert(0,msg_length)
 		data_hash[:msg_len] = msg_length
 
-		encode_string
+		ascii_to_string encode_string
 	end
 
 	private
