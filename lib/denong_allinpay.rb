@@ -11,7 +11,7 @@ module Allinpay
   def receive_data data
     puts "origin data is #{data}, its size is #{data.size}"
 
-    changed_data = data.bytes.join
+    changed_data = data.unpack("H*").join.upcase
     
     # changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
     puts "changed_data is #{changed_data}, its size is #{data.size}\n"
