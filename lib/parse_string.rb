@@ -21,9 +21,11 @@ module CodeProcessor
 			when :bcd_byte then
 				string_temp = string_temp.to_i*2	
 			when :bcd_even then
-				string_temp = string_temp[0,string_temp.size-1] if string_temp[-1] == "B"
+				string_temp = string_temp[0,string_temp.size-1] if string_temp[-1] == "A"
 			end
-			
+			if name == :phone
+				string_temp = string_temp[1..string_temp.size]
+			end
 			#得到数据的名字，对应内容
 			decode_result[name] = string_temp
 		end
@@ -39,7 +41,6 @@ module CodeProcessor
 		data_hash[:trade_time] = data_hash[:trade_time].slice!(-6..-1)
 		data_hash[:bit_map][-7] = "A"
 		encode_hash.each do |name,info_hash|
-
 			next if (name == :msg_len || (!data_hash.has_key? name))
 			
 			string_temp = data_hash[name]
@@ -49,7 +50,10 @@ module CodeProcessor
 			when :bcd_byte then
 				string_temp = (string_temp.to_i/2).to_s	
 			when :bcd_even then
-				string_temp = string_temp.concat("B") if string_temp.size%2 == 0
+				string_temp = string_temp.concat("A") if string_temp.size%2 == 1
+			end
+			if name == :phone
+				string_temp = "1#{string_temp}"
 			end
 			encode_string << string_temp
 		end
@@ -58,7 +62,7 @@ module CodeProcessor
 		msg_length = (encode_string.size/2).to_s(16).rjust(4,"0").upcase
 		encode_string.insert(0,msg_length)
 		data_hash[:msg_len] = msg_length
-
+		puts "encode data is #{encode_string}, its size is #{encode_string.size}\n"
 		ascii_to_string encode_string
 	end
 

@@ -18,8 +18,6 @@ module Allinpay
     puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
     send_data "#{data_result}"
-    puts "encode hash is #{@data_hash}\n"
-    puts "encode data is #{data_result}, its class is #{data_result.class}\n"
   end
 
   private
@@ -31,13 +29,13 @@ module Allinpay
       msg_type: {length:4, type: :bcd},     #消息类型
       bit_map: {length:16, type: :ascii},   #位元表
       account_len: {length:2, type: :bcd_byte},  #手机号+银行卡号的长度
-      phone: {length:11,  type: :bcd},  #手机号
+      phone: {length:12,  type: :bcd},  #手机号
       card: {length: :account_length, type: :bcd_even},  #卡号
       trade_id: {length:6,  type: :bcd},  #交易处理码
       price: {length:12,  type: :bcd},  #交易金额
       trade_ind: {length:6,  type: :bcd},  #收单方系统跟踪号，交易流水
       trade_time: {length:6, type: :bcd},  #收单方所在地时间，交易时间
-      trade_date: {length:8, type: :bcd},  #收单方所在地日期，交易日期
+      trade_date: {length:4, type: :bcd},  #收单方所在地日期，交易日期
       refer_id: {length:24, type: :ascii_convert},  #检索参考号，POS中心系统流水号/交易参考号
       resp_code: {length:4, type: :ascii_convert},  #应答码
       pos_ind: {length:16, type: :ascii_convert}, #收单方终端标识码，POS终端号
@@ -46,7 +44,6 @@ module Allinpay
 
     @data_hash.clear if @data_hash
     # data_result.clear if @data_result
-    puts "decode #{decode_string}"
     return unless decode_string
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
