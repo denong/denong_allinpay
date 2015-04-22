@@ -11,10 +11,11 @@ module Allinpay
   def receive_data data
     puts "origin data is #{data}, its size is #{data.size}"
 
+    data.gsub!("\n","")
     changed_data = data.unpack("H*").join.upcase
     
     # changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
-    puts "changed_data is #{changed_data}, its size is #{data.size}\n"
+    puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
     send_data "#{data_result}\n"
     puts "encode hash is #{@data_hash}\n"
