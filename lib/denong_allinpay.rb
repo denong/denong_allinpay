@@ -9,15 +9,16 @@ require "socket"
 module Allinpay
   include CodeProcessor
   def receive_data data
-    puts "Received #{data}, its size is #{data.size}\n"
+    puts "origin data is #{data}, its size is #{data.size}"
+    data.gsub!("\n",'')
     changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
     puts "changed_data is #{changed_data}, its size is #{data.size}\n"
-    @data_result = data_process changed_data
+    data_result = data_process changed_data if changed_data
+    send_data "#{data_result}\n"
     puts "encode hash is #{@data_hash}\n"
-    puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
-    @data_result
+    puts "encode data is #{data_result}, its class is #{data_result.class}\n"
   end
-  
+
   private
   def data_process decode_string
     decode_hash = {
@@ -41,8 +42,9 @@ module Allinpay
     }
 
     @data_hash.clear if @data_hash
-    @data_result.clear if @data_result
-
+    # data_result.clear if @data_result
+    puts "decode #{decode_string}"
+    return unless decode_string
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
     puts "decode hash is #{@data_hash}\n"
@@ -56,7 +58,7 @@ module Allinpay
 
     #编码时需要加上应答码两个字节,用于调试
     @data_hash[:resp_code] = "00"
-    @data_result = encode @data_hash,decode_hash
+    encode @data_hash,decode_hash
   end
 end
 
@@ -66,25 +68,8 @@ ip_addr = doc.search("IPAddr").first.content
 port = doc.search("Port").first.content
 $dest_addr = doc.search("DestAddr").first.content
 
-# puts "ip address is #{ip_addr}, port is #{port}"
-# server = TCPServer.open ip_addr, port
-# Thin::Server.start do
-EM.run { EM.start_server ip_addr, port, Allinpay }
-# end
-  # loop do
-  #   Thread.start(server.accept) do |client|
-  #     allinpay = Allinpay.new
-  #     data = client.gets
-  #     puts data
-  #     data = data[0..-2]
+puts "ip address is #{ip_addr}, port is #{port}"
 
-  #     begin
-  #       result = allinpay.process data
-  #       client.puts result
-  #     rescue Exception => e
-  #       puts "Exception is #{e}"
-  #     end
-      
-  #     client.close
-  #   end
-  # end
+Thin::Server.start do
+  EM.run { EM.start_server ip_addr, port, Allinpay }
+end
