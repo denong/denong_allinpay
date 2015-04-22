@@ -10,7 +10,9 @@ module Allinpay
   include CodeProcessor
   def receive_data data
     puts "Received #{data}, its size is #{data.size}\n"
-    @data_result = data_process data
+    changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
+    puts "changed_data is #{changed_data}, its size is #{data.size}\n"
+    @data_result = data_process changed_data
     puts "encode hash is #{@data_hash}\n"
     puts "encode data is #{@data_result}, its class is #{@data_result.class}\n"
     @data_result
