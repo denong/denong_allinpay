@@ -55,7 +55,7 @@ module CodeProcessor
 			if name == :phone
 				string_temp = "1#{string_temp}"
 			end
-			encode_string << string_temp
+			encode_string << string_temp if string_temp
 		end
 
 		#add msg_length
