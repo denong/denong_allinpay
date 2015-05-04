@@ -59,7 +59,7 @@ module CodeProcessor
 			elsif name == :price
 				string_temp = (string_temp*100).to_i.to_s.rjust(12,"0")
 			end
-			encode_string << string_temp
+			encode_string << string_temp if string_temp
 		end
 
 		#add msg_length
