@@ -14,7 +14,6 @@ module Allinpay
     data.gsub!("\n","")
     changed_data = data.unpack("H*").join.upcase
     return if changed_data == "000430303030"
-    # changed_data = data.map { |b| "#{b.gsub("0x","")}" }.join
     puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
     send_data "#{data_result}"
@@ -48,13 +47,14 @@ module Allinpay
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
     puts "decode hash is #{@data_hash}\n"
+    send_hash = { tl_trade: @data_hash}
 
-    # response = RestClient.post $dest_addr,@data_hash
-    # if response.code = 200
-    #   @data_hash[:resp_code] = "00"
-    # else
-    #   @data_hash[:resp_code] = "01"
-    # end
+    response = RestClient.post "#{$dest_addr}:#{$dest_port}/tl_trades", send_hash, content_type: "json", accept: "json"
+    if response.code == 201
+      @data_hash[:resp_code] = "00"
+    else
+      @data_hash[:resp_code] = "01"
+    end
 
     #编码时需要加上应答码两个字节,用于调试
     @data_hash[:resp_code] = "00"
@@ -67,6 +67,7 @@ doc = Nokogiri::XML(open(config_path))
 ip_addr = doc.search("IPAddr").first.content
 port = doc.search("Port").first.content
 $dest_addr = doc.search("DestAddr").first.content
+$dest_port = doc.search("DestPort").first.content
 
 puts "ip address is #{ip_addr}, port is #{port}"
 

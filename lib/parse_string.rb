@@ -31,6 +31,8 @@ module CodeProcessor
 		end
 
 		decode_result[:trade_time].prepend decode_result[:trade_date]
+		decode_result[:trade_time].prepend DateTime.now.strftime("%Y")
+		decode_result[:price] = decode_result[:price].to_f/100
 		decode_result
 	end
 
@@ -54,6 +56,8 @@ module CodeProcessor
 			end
 			if name == :phone
 				string_temp = "1#{string_temp}"
+			elsif name == :price
+				string_temp = (string_temp*100).to_i.to_s.rjust(12,"0")
 			end
 			encode_string << string_temp
 		end
