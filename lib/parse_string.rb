@@ -33,7 +33,8 @@ module CodeProcessor
 		decode_result[:trade_time].prepend decode_result[:trade_date]
 		decode_result[:trade_time].prepend DateTime.now.strftime("%Y")
 		decode_result[:price] = decode_result[:price].to_f/100
-		if decode_result[:trade_id] == 100002
+		puts "decode_result[:trade_id] is #{decode_result[:trade_id] == "100002"}"
+		if decode_result[:trade_id] == "100002"
 			decode_result[:price] *= (-1)
 		end
 		decode_result
