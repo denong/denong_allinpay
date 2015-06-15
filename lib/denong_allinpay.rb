@@ -42,7 +42,6 @@ module Allinpay
     }
 
     @data_hash.clear if @data_hash
-    # data_result.clear if @data_result
     return unless decode_string
     @data_hash = decode decode_string,decode_hash
     return unless @data_hash
@@ -63,7 +62,7 @@ module Allinpay
     end
 
     #编码时需要加上应答码两个字节,用于调试
-    @data_hash[:resp_code] = "00"
+    # @data_hash[:resp_code] = "00"
     encode @data_hash,decode_hash
   end
 end
