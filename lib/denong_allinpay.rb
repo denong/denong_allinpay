@@ -54,7 +54,12 @@ module Allinpay
     else
       url = "#{$dest_addr}/tl_trades"
     end
-    response = RestClient.post url, send_hash, content_type: "json", accept: "json"
+    begin
+      response = RestClient.post url, send_hash, content_type: "json", accept: "json"
+    rescue Exception => e
+      puts "Exception is #{e}"
+    end
+    
     if response.code == 201
       @data_hash[:resp_code] = "00"
     else
