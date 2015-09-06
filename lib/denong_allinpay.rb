@@ -9,12 +9,10 @@ require "socket"
 module Allinpay
   include CodeProcessor
   def receive_data data
-    puts "origin data is #{data}, its size is #{data.size}"
-
     data.gsub!("\n","")
     changed_data = data.unpack("H*").join.upcase
     return if changed_data == "000430303030"
-    puts "changed_data is #{changed_data}, its size is #{changed_data.size}\n"
+    puts "Time is #{DateTime.now}, changed_data is #{changed_data}, its size is #{changed_data.size}\n"
     data_result = data_process changed_data if changed_data
     send_data "#{data_result}"
   end
@@ -54,13 +52,14 @@ module Allinpay
     else
       url = "#{$dest_addr}/tl_trades"
     end
+
     begin
       response = RestClient.post url, send_hash, content_type: "json", accept: "json"
     rescue Exception => e
       puts "Exception is #{e}"
     end
     
-    if response.code == 201
+    if !response.nil? && response.code == 201
       @data_hash[:resp_code] = "00"
     else
       @data_hash[:resp_code] = "01"
@@ -68,7 +67,7 @@ module Allinpay
 
     #编码时需要加上应答码两个字节,用于调试
     # @data_hash[:resp_code] = "00"
-    encode @data_hash,decode_hash
+    encode @data_hash, decode_hash
   end
 end
 
