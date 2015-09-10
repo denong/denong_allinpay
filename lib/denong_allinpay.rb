@@ -42,7 +42,13 @@ module Allinpay
 
     @data_hash.clear if @data_hash
     return unless decode_string
-    @data_hash = decode decode_string,decode_hash
+    
+
+    begin
+      @data_hash = decode decode_string,decode_hash
+    rescue Exception => e
+      puts "decode exception is #{e}"
+    end
     return unless @data_hash
     puts "decode hash is #{@data_hash}\n"
     send_hash = { tl_trade: @data_hash}

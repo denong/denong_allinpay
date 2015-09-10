@@ -14,7 +14,7 @@ module CodeProcessor
 
 			#取得需要解码的string的长度
 			string_temp = decode_string.slice!(0,string_length)
-			return unless string_temp
+			next unless string_temp
 			case info_hash[:type]
 			when :ascii_convert then
 				string_temp = ascii_to_string string_temp
