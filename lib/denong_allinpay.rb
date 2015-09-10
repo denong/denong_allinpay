@@ -9,7 +9,6 @@ require "socket"
 module Allinpay
   include CodeProcessor
   def receive_data data
-    puts "-----start-----"
     data.gsub!("\n","")
     changed_data = data.unpack("H*").join.upcase
     return if changed_data == "000430303030"
