@@ -33,7 +33,6 @@ module CodeProcessor
 		decode_result[:trade_time].prepend decode_result[:trade_date]
 		decode_result[:trade_time].prepend DateTime.now.strftime("%Y")
 		decode_result[:price] = decode_result[:price].to_f/100
-		puts "decode_result[:trade_id] is #{decode_result[:trade_id] == "100002"}"
 		if decode_result[:trade_id] == "100002"
 			decode_result[:price] *= (-1)
 		end
@@ -45,7 +44,8 @@ module CodeProcessor
 		encode_string = ""
 
 		data_hash[:trade_time] = data_hash[:trade_time].slice!(-6..-1)
-		data_hash[:bit_map][-7] = "A"
+
+		data_hash[:bit_map][-7] = "A"  unless data_hash[:bit_map].nil? || data_hash[:bit_map].empty?
 		encode_hash.each do |name,info_hash|
 			next if (name == :msg_len || (!data_hash.has_key? name))
 			
